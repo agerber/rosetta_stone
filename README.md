@@ -19,6 +19,7 @@ This repo contains the asteroids reference project translated into the following
 
 
 ## if you need to reset them
+
 ```bash
   git submodule foreach --recursive git reset --hard
   git submodule update --init --force --recursive
