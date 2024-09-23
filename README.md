@@ -1,7 +1,7 @@
 
 # rosetta stone - the asteroids reference project
-This repo contains the asteroids reference project translated into the following languages; Java, Kotlin, Python, 
-Typescript; with Swift and C++ under development. 
+This repo contains the asteroids reference project translated into the following languages; Java, Kotlin, Python, and 
+Typescript; with Swift and C++, Rust, and GoLang under development. 
 
 ## add the submodules
 ```bash
@@ -18,7 +18,7 @@ Typescript; with Swift and C++ under development.
 
 ```
 
-## if you need to refresh them
+## if you need to reset them
 ```bash
   git submodule foreach --recursive git reset --hard
   git submodule update --init --force --recursive
