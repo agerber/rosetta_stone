@@ -1,0 +1,8 @@
+[package]
+name = "rust_asteroid"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+pixels = "0.14.0"
+winit = {version="0.30.5",features = ["rwh_05"]}
