@@ -5,7 +5,8 @@ use std::sync::{Arc, Mutex};
 use std::f32::consts::PI;
 use winit::window::{Window, WindowId};
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
-
+use std::thread;
+use std::time::{Duration, Instant};
 
 #[derive(Default)]
 struct App {
@@ -135,5 +136,23 @@ fn main() {
     let event_loop = EventLoop::new().unwrap();
     let app = Arc::new(Mutex::new(App::default())); 
     
+    let app_for_thread = Arc::clone(&app);
+
+    // Step 1: Start the animation thread.
+    thread::spawn(move || loop {
+        let start = Instant::now();
+
+        // Safely lock the app and update/render.
+        if let Ok(mut app) = app_for_thread.lock() {
+            app.update_and_render();
+        }
+
+        // Ensure the frame duration is 40ms.
+        let elapsed = start.elapsed();
+        if elapsed < Duration::from_millis(40) {
+            thread::sleep(Duration::from_millis(40) - elapsed);
+        }
+    });
+
     event_loop.run_app(&mut *app.lock().unwrap());
 }
