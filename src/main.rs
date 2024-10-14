@@ -2,6 +2,7 @@ use pixels::{Pixels, SurfaceTexture};
 use winit::application::ApplicationHandler;
 use winit::event::WindowEvent;
 use std::sync::{Arc, Mutex};
+use std::f32::consts::PI;
 use winit::window::{Window, WindowId};
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 
@@ -37,7 +38,7 @@ impl ApplicationHandler for App {
             }
             WindowEvent::RedrawRequested => {
                 println!("Redraw requested.");
-                self.draw_polygon();
+                self.update_and_render();
                 self.pixels.as_mut().unwrap().render().unwrap();
                 self.window.as_ref().unwrap().request_redraw();
             }
@@ -47,6 +48,15 @@ impl ApplicationHandler for App {
 }
 
 impl App {
+    fn update_and_render(&mut self) {
+        self.angle += 0.05;
+        if self.angle >= 2.0 * PI {
+            self.angle -= 2.0 * PI;
+        }
+
+        self.draw_polygon();
+    }
+
     fn draw_polygon(&mut self) {
         let frame = self.pixels.as_mut().unwrap().frame_mut();
         frame.fill(0x00); // Clear the frame.
@@ -57,17 +67,35 @@ impl App {
         // Define a hexagon with six vertices around the origin (0, 0).
         let hexagon_points: Vec<(f32, f32)> = (0..6)
             .map(|i| {
-                let theta = i as f32 * std::f32::consts::PI / 3.0; // 60-degree increments.
+                let theta = i as f32 * PI / 3.0; // 60-degree increments.
                 (radius * theta.cos(), radius * theta.sin())
             })
             .collect();
 
-        // Translate each point to the window center and draw lines between them.
+         // Rotate and translate each point to the window center.
+        let rotated_points: Vec<(usize, usize)> = hexagon_points
+        .iter()
+        .map(|(x, y)| Self::rotate_point(*x, *y, self.angle, cx, cy))
+        .collect();
+
+        // Draw the polygon by connecting each pair of points.
         for i in 0..6 {
-            let (x1, y1) = (hexagon_points[i].0 + cx, hexagon_points[i].1 + cy);
-            let (x2, y2) = (hexagon_points[(i + 1) % 6].0 + cx, hexagon_points[(i + 1) % 6].1 + cy);
-            Self::draw_line(x1 as usize, y1 as usize, x2 as usize, y2 as usize, frame);
+            let (x1, y1) = rotated_points[i];
+            let (x2, y2) = rotated_points[(i + 1) % 6]; // Connect to the next point.
+            Self::draw_line(x1, y1, x2, y2, frame);
         }
+    }
+    fn rotate_point(x: f32, y: f32, angle: f32, cx: f32, cy: f32) -> (usize, usize) {
+        let cos_theta = angle.cos();
+        let sin_theta = angle.sin();
+
+        let rotated_x = cos_theta * x - sin_theta * y;
+        let rotated_y = sin_theta * x + cos_theta * y;
+
+        let final_x = rotated_x + cx;
+        let final_y = rotated_y + cy;
+
+        (final_x as usize, final_y as usize)
     }
 
     // Bresenham's line drawing algorithm
@@ -100,10 +128,9 @@ impl App {
                 y += sy;
             }
         }
-    }
 }
 
-
+}
 fn main() {
     let event_loop = EventLoop::new().unwrap();
     let app = Arc::new(Mutex::new(App::default())); 
