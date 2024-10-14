@@ -1,0 +1,32 @@
+[submodule "asteroids_java"]
+	path = asteroids_java
+	url = git@github.com:agerber/asteroids_java.git
+	branch = master
+[submodule "asteroids_python"]
+	path = asteroids_python
+	url = git@github.com:agerber/asteroids_python.git
+	branch = master
+[submodule "asteroids_kotlin"]
+	path = asteroids_kotlin
+	url = git@github.com:agerber/asteroids_kotlin.git
+	branch = master
+[submodule "asteroids_js"]
+	path = asteroids_js
+	url = git@github.com:agerber/asteroids_js.git
+	branch = main
+[submodule "asteroids_cpp"]
+	path = asteroids_cpp
+	url = git@github.com:agerber/asteroids_cpp.git
+	branch = master
+[submodule "asteroids_swift"]
+	path = asteroids_swift
+	url = git@github.com:agerber/asteroids_swift.git
+	branch = main
+[submodule "asteroids_rust"]
+	path = asteroids_rust
+	url = git@github.com:agerber/asteroids_rust.git
+	branch = main
+[submodule "asteroids_go"]
+	path = asteroids_go
+	url = git@github.com:agerber/asteroids_go.git
+	branch = main
